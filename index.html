@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>时间若白驹过隙，忽然而矣！</title>
+    <style>
+        #root {
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script>
+        const targetTime = new Date('2019/1/1').getTime(),
+            el = document.getElementById('root')
+        mainProgram()
+
+        function mainProgram() {
+            if (targetTime > Date.now()) {
+                startCountDown()
+            } else {
+                showHappyNewYear()
+            }
+        }
+
+        function startCountDown() {
+            countdown(targetTime, timeIsLeaving, showHappyNewYear)
+            window.__iamleaving2019__ = setInterval(() => {
+                countdown(targetTime, timeIsLeaving, showHappyNewYear)
+            }, 1000);
+        }
+
+        function timeIsLeaving(time) {
+            el.innerHTML = `
+                <h5>距离2019年结束还有</h5>
+                <h5>${time.days}天 ${time.hours}:${time.minutes}:${time.seconds}</h5>
+            `
+        }
+
+        function showHappyNewYear() {
+            console.warn('2019年已经结束了！！！！')
+            el.innerHTML = `
+                <h5>Happy New Year !!!</h5>
+                <h5>Welcome to 2020.</h5>
+                <img title="新年快乐" src="https://www.google.com/logos/doodles/2019/new-years-eve-2019-4659144240922624-l.png" />
+            `
+        }
+
+        function countdown(targetTime, updateTime, end) {
+            var now = Date.now();
+            var timeDiff = Math.floor((targetTime - now) / 1000);
+            if (timeDiff > 0) {
+                const time = {
+                    days: Math.floor(timeDiff / (3600 * 24)),
+                    hours: date2str(Math.floor(timeDiff % (3600 * 24) / 3600)),
+                    minutes: date2str(Math.floor(timeDiff % 3600 / 60)),
+                    seconds: date2str(timeDiff % 60)
+                }
+                updateTime && updateTime(time)
+            } else {
+                clearInterval(window.__iamleaving2019__)
+                end && end()
+            }
+        }
+
+        function date2str(num) {
+            return num < 10 ? ('0' + num) : String(num);
+        }
+    </script>
+</body>
+
+</html>
